@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import './index.css'
+import AuthProvider from './Context/AuthProvider'
+import Login from './components/Login'
+import SignUp from './components/SignUp'
+import ChatRoom from './components/ChatRoom'
+import { Route, Routes, BrowserRouter } from 'react-router-dom'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<ChatRoom />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/sign-up" element={<SignUp />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
+  )
 }
 
-export default App;
+export default App
