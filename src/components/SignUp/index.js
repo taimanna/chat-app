@@ -37,9 +37,7 @@ function SignUp() {
 
   const createUser = () => {
     if (checkPassword) {
-      createUserWithEmailAndPassword(auth, email, password).then((result) => {
-        console.log(result)
-      })
+      createUserWithEmailAndPassword(auth, email, password).then((result) => {})
     }
   }
 
