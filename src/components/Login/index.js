@@ -1,23 +1,32 @@
-import React, { useState, useEffect } from 'react'
-import { GoogleOutlined, FacebookFilled } from '@ant-design/icons'
-import { Row, Button, Input, Checkbox } from 'antd'
-import { signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth'
-import { auth, fbProvider, ggProvider } from '../../firebase/config'
-import './style.css'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Row, Button, Input, Checkbox } from 'antd'
+import { GoogleOutlined, FacebookFilled } from '@ant-design/icons'
+import { signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth'
+import './style.css'
+import { addDocument } from '../../firebase/services'
+import { auth, fbProvider, ggProvider, getAdditionalUserInfo } from '../../firebase/config'
 
 function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
 
-  const handleFbLogin = () => {
-    signInWithPopup(auth, fbProvider).catch((error) => {
-      const errorCode = error.code
-      if (errorCode === 'auth/account-exists-with-different-credential') {
-        setErrorMessage('Địa chỉ email kết nối với FB này đã được sử dụng.')
-      }
-    })
+  const handleFbLogin = async () => {
+    const data = await signInWithPopup(auth, fbProvider)
+
+    const additionalUserInfo = getAdditionalUserInfo(data)
+    const user = auth.currentUser
+
+    if (additionalUserInfo?.isNewUser) {
+      addDocument('users', {
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL ? user.photoURL : 'default',
+        uid: user.uid,
+        providerId: user.providerId,
+      })
+    }
   }
 
   const handleGgLogin = () => {

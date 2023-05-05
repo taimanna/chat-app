@@ -1,6 +1,12 @@
 import { initializeApp } from 'firebase/app'
-import { getAuth, FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore/lite'
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
+import {
+  getAuth,
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  getAdditionalUserInfo,
+  connectAuthEmulator,
+} from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDqaQiDT1dcSEKwu54bme0tgtX30DI8NWY',
@@ -14,10 +20,13 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
-
+if (window.location.hostname === 'localhost') {
+  connectFirestoreEmulator(db, 'localhost', 8080)
+}
 const auth = getAuth()
+connectAuthEmulator(auth, 'http://localhost:9099')
 
 const fbProvider = new FacebookAuthProvider()
 const ggProvider = new GoogleAuthProvider()
 
-export { db, auth, fbProvider, ggProvider }
+export { db, auth, fbProvider, ggProvider, getAdditionalUserInfo }
