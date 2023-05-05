@@ -20,11 +20,12 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
-if (window.location.hostname === 'localhost') {
-  connectFirestoreEmulator(db, 'localhost', 8080)
-}
 const auth = getAuth()
-connectAuthEmulator(auth, 'http://localhost:9099')
+
+// if (window.location.hostname === 'localhost') {
+//   connectFirestoreEmulator(db, 'localhost', 8080)
+//   connectAuthEmulator(auth, 'http://localhost:9099')
+// }
 
 const fbProvider = new FacebookAuthProvider()
 const ggProvider = new GoogleAuthProvider()
