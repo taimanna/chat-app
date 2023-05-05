@@ -4,7 +4,7 @@ import { Row, Button, Input, Checkbox } from 'antd'
 import { GoogleOutlined, FacebookFilled } from '@ant-design/icons'
 import { signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth'
 import './style.css'
-import { addDocument } from '../../firebase/services'
+import { addDocument, generateKeywords } from '../../firebase/services'
 import { auth, fbProvider, ggProvider, getAdditionalUserInfo } from '../../firebase/config'
 
 function Login() {
@@ -25,14 +25,27 @@ function Login() {
         photoURL: user.photoURL ? user.photoURL : 'default',
         uid: user.uid,
         providerId: user.providerId,
+        keywords: generateKeywords(user.displayName),
       })
     }
   }
 
-  const handleGgLogin = () => {
-    signInWithPopup(auth, ggProvider).catch((error) => {
-      console.log(error)
-    })
+  const handleGgLogin = async () => {
+    const data = await signInWithPopup(auth, ggProvider)
+
+    const additionalUserInfo = getAdditionalUserInfo(data)
+    const user = auth.currentUser
+
+    if (additionalUserInfo?.isNewUser) {
+      addDocument('users', {
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL ? user.photoURL : 'default',
+        uid: user.uid,
+        providerId: user.providerId,
+        keywords: generateKeywords(user.displayName),
+      })
+    }
   }
 
   const handlePasswordLogin = () => {
