@@ -1,10 +1,12 @@
 import { initializeApp } from 'firebase/app'
+// eslint-disable-next-line no-unused-vars
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
 import {
   getAuth,
   FacebookAuthProvider,
   GoogleAuthProvider,
   getAdditionalUserInfo,
+  // eslint-disable-next-line no-unused-vars
   connectAuthEmulator,
 } from 'firebase/auth'
 

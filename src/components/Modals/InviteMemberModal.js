@@ -4,8 +4,7 @@ import React, { useContext, useMemo, useState } from 'react'
 
 import { db } from '../../firebase/config'
 import { AppContext } from '../../Context/AppProvider'
-import { AuthContext } from '../../Context/AuthProvider'
-import { collection, query, where, limit, getDocs, orderBy, doc, updateDoc, arrayUnion } from 'firebase/firestore'
+import { collection, query, where, limit, getDocs, orderBy, doc, updateDoc } from 'firebase/firestore'
 
 function DebounceSelect({ fetchOptions, debounceTimeout = 300, ...props }) {
   const [fetching, setFetching] = useState(false)
@@ -66,9 +65,6 @@ async function fetchUserList(search) {
 function InviteMemberModal() {
   const [value, setValue] = useState([])
   const { isInviteMemberOpen, setIsInviteMemberOpen, selectedRoomId, selectedRoom } = useContext(AppContext)
-  const {
-    user: { uid },
-  } = useContext(AuthContext)
   const [form] = Form.useForm()
 
   const handleOk = async () => {
@@ -78,7 +74,6 @@ function InviteMemberModal() {
     const roomRef = doc(db, 'rooms', selectedRoomId)
     await updateDoc(roomRef, {
       members: [...selectedRoom.members, ...value],
-      // members: arrayUnion('VcdXpbkqSNbPKiGa7wNcwSCb3Pv1'),
     })
 
     setIsInviteMemberOpen(false)
