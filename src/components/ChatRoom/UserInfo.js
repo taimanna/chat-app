@@ -25,7 +25,7 @@ function UserInfo() {
     <WrapperStyled>
       <div>
         <Avatar src={photoURL}>{photoURL ? '' : displayName?.charAt(0)?.toUpperCase()}</Avatar>
-        <Typography.Text className="username">{displayName}</Typography.Text>
+        <Typography.Text className="username">{displayName ? displayName : 'New User'}</Typography.Text>
       </div>
       <Button onClick={() => auth.signOut()} ghost>
         Đăng xuất

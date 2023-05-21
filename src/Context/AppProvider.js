@@ -6,6 +6,7 @@ export const AppContext = createContext()
 
 export default function AppProvider({ children }) {
   const [isAddRoomOpen, setIsAddRoomOpen] = useState(false)
+  const [isSignUpOpen, setIsSignUpOpen] = useState(false)
   const [isInviteMemberOpen, setIsInviteMemberOpen] = useState(false)
   const [selectedRoomId, setSelectedRoomId] = useState('')
 
@@ -55,6 +56,8 @@ export default function AppProvider({ children }) {
         setSelectedRoomId,
         isInviteMemberOpen,
         setIsInviteMemberOpen,
+        isSignUpOpen,
+        setIsSignUpOpen,
       }}
     >
       {children}

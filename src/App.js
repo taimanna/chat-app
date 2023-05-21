@@ -16,9 +16,9 @@ function App() {
           <Routes>
             <Route path="/" element={<ChatRoom />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/sign-up" element={<SignUp />} />
           </Routes>
 
+          <SignUp />
           <AddRoomModal />
           <InviteMemberModal />
         </AppProvider>

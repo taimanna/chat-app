@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react'
-import { Row, Col, Typography, Input, Button } from 'antd'
-import { auth } from '../../firebase/config'
+import React, { useState, useEffect, useContext } from 'react'
+import { Row, Col, Typography, Input, Button, Modal } from 'antd'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { AppContext } from '../../Context/AppProvider'
 import { LeftOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
+import { auth } from '../../firebase/config'
+import { addDocument, generateKeywords } from '../../firebase/services'
 
 const { Title } = Typography
 
 function SignUp() {
+  const { isSignUpOpen, setIsSignUpOpen } = useContext(AppContext)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [reEnterPassword, setReEnterPassword] = useState('')
@@ -37,28 +40,42 @@ function SignUp() {
 
   const createUser = () => {
     if (checkPassword) {
-      createUserWithEmailAndPassword(auth, email, password).then((result) => {})
+      createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+        const user = userCredential.user
+
+        console.log(user)
+
+        addDocument('users', {
+          displayName: 'New user',
+          email: user.email,
+          photoURL: null,
+          uid: user.uid,
+          providerId: user.providerId,
+          keywords: generateKeywords('New user'),
+        })
+      })
     }
   }
 
+  const handleOk = () => {
+    console.log('alime')
+
+    createUser()
+
+    setIsSignUpOpen(false)
+  }
+
+  const handleCancel = () => {
+    setIsSignUpOpen(false)
+  }
+
   return (
-    <div>
-      <Row justify="center">
-        <Col span={8}>
-          <Title>
-            <Link to="/login">
-              <LeftOutlined />
-            </Link>
-            Sign Up
-          </Title>
-          <Input onChange={handleInputEmail} placeholder="Nhập email" />
-          <Input.Password onChange={handleInputPassword} placeholder="Nhập mật khẩu" />
-          <Input.Password onChange={handleReEnterPassword} placeholder="Nhập lại mật khẩu" />
-          {checkPassword ? <></> : <div style={{ color: 'red' }}>Mật khẩu không khớp</div>}
-          <Button onClick={createUser}>Đăng ký</Button>
-        </Col>
-      </Row>
-    </div>
+    <Modal title="Tạo tài khoản" open={isSignUpOpen} onOk={handleOk} onCancel={handleCancel}>
+      <Input onChange={handleInputEmail} placeholder="Nhập email" />
+      <Input.Password onChange={handleInputPassword} placeholder="Nhập mật khẩu" />
+      <Input.Password onChange={handleReEnterPassword} placeholder="Nhập lại mật khẩu" />
+      {checkPassword ? <></> : <div style={{ color: 'red' }}>Mật khẩu không khớp</div>}
+    </Modal>
   )
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Row, Button, Input, Checkbox } from 'antd'
 import { GoogleOutlined, FacebookFilled } from '@ant-design/icons'
@@ -6,11 +6,13 @@ import { signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth'
 import './style.css'
 import { addDocument, generateKeywords } from '../../firebase/services'
 import { auth, fbProvider, ggProvider, getAdditionalUserInfo } from '../../firebase/config'
+import { AppContext } from '../../Context/AppProvider'
 
 function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+  const { setIsSignUpOpen } = useContext(AppContext)
 
   const handleFbLogin = async () => {
     const data = await signInWithPopup(auth, fbProvider)
@@ -90,7 +92,13 @@ function Login() {
         </Button>
       </Row>
       <Row>
-        <Link to={'/sign-up'}>Đăng ký</Link>
+        <Link
+          onClick={() => {
+            setIsSignUpOpen(true)
+          }}
+        >
+          Đăng ký
+        </Link>
       </Row>
     </div>
   )
